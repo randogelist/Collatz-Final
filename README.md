@@ -19,6 +19,20 @@ $$
 **Open:** an accepted witness and the converse from Collatz to certificate
 existence. Enumeration alone does not guarantee success.
 
+## Sample runner output
+
+After a successful build and axiom audit (version prefix omitted):
+
+```text
+ACCEPTED_WITNESS_EXISTS_IMPLIES_COLLATZ=PROVED
+COLLATZ_IMPLIES_ACCEPTED_WITNESS_EXISTS=NOT_PROVED
+ACCEPTED_WITNESS_EXISTS_IFF_COLLATZ=NOT_ESTABLISHED
+ACCEPTED_CONCRETE_WITNESS=NOT_SUPPLIED
+```
+
+The proved biconditional equates indexed search with matrix-certificate
+acceptance; the transfer to Collatz is presently one-way.
+
 ## Frontier A · conditional limit-exchange closure
 
 Let $U_c(j,k)$ indicate actual restart absorption by depth $k$ on the dyadic

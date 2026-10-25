@@ -99,6 +99,13 @@ def main() -> int:
     receipt_path.unlink(missing_ok=True)
     modules = read_list(ROOT / "scripts/modules.txt")
     endpoints = read_list(ROOT / "scripts/audit_endpoints.txt")
+    architecture_endpoints = {
+        "CollatzFiniteWitness.FINITE_WITNESS_IMPLIES_COLLATZ",
+        "CollatzFiniteWitness.RawSearch.INDEXED_SEARCH_IMPLIES_COLLATZ",
+        "CollatzFiniteWitness.RawSearch.INDEXED_SEARCH_IFF_ORIGINAL_ACCEPTANCE",
+    }
+    if not architecture_endpoints.issubset(endpoints):
+        raise RuntimeError("architecture report requires all three audited transfer/coverage endpoints")
     files = {m: ROOT.joinpath(*m.split(".")).with_suffix(".lean") for m in modules}
     actual = {p.stem for p in ROOT.glob("*.lean")}
     if actual != set(modules):
@@ -221,13 +228,24 @@ def main() -> int:
                     *sorted((ROOT/"scripts").glob("*")), ROOT/"run.cmd"]
     provenance = {str(p.relative_to(ROOT)): sha(p) for p in source_paths if p.is_file()}
     (ROOT/".build/source-provenance.json").write_text(json.dumps(provenance, indent=2) + "\n")
+    # Report only the audited forward implication. The converse and witness
+    # existence remain open; these labels do not assert their negations.
+    architecture = {
+        "ACCEPTED_WITNESS_EXISTS_IMPLIES_COLLATZ": "PROVED",
+        "COLLATZ_IMPLIES_ACCEPTED_WITNESS_EXISTS": "NOT_PROVED",
+        "ACCEPTED_WITNESS_EXISTS_IFF_COLLATZ": "NOT_ESTABLISHED",
+        "ACCEPTED_CONCRETE_WITNESS": "NOT_SUPPLIED",
+    }
     receipt = {"workflow": "YOU_ARE_GOODWORKFLOWFRONTIER", "version": VERSION,
                "build": "PASS", "axiom_audit": "PASS", "compiler": identity,
                "compiled": compiled, "frozen_reused": reused, "modules": module_results,
                "endpoints": endpoints, "allowed_axioms": ["propext", "Classical.choice", "Quot.sound"],
                "accepted_concrete_witness": "NOT_SUPPLIED", "collatz_proved": False,
-               "search_executed": False, "utc_timestamp": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())}
+               "search_executed": False, "architecture": architecture,
+               "utc_timestamp": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())}
     receipt_path.write_text(json.dumps(receipt, indent=2) + "\n")
+    for key, value in architecture.items():
+        emit(key, value)
     emit("SUMMARY", f"BUILD=PASS;AXIOM_AUDIT=PASS;NEW={len(compiled)};REUSED={len(reused)};ACCEPTED_WITNESS=NOT_SUPPLIED;COLLATZ_PROVED=NO")
     return 0
 
