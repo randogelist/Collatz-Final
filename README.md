@@ -64,6 +64,16 @@ No universal minimality or optimality of the remaining search language is claime
 
 ## Build and audit
 
+**Assistant execution policy: GitHub Actions CI only.** All Lean compilation,
+axiom audits, and Lean-backed tests must run on the CI runner, as recorded in
+[`AGENTS.md`](AGENTS.md). The commands below document the runner and manual
+tooling; they do not authorize assistant-local compilation.
+
+The [first CI run](https://github.com/randogelist/Collatz-Final/actions/runs/40174097923)
+passed for commit `6ca031982422214ff33f2ec651b9c0da2f7551e6`: eight modules
+compiled, 24 endpoints passed the axiom whitelist, and all four guard tests
+passed. Its compiler and audit receipts are retained as workflow artifacts.
+
 The project needs only the pinned Lean distribution, including core/Omega.
 Mathlib is not required for this certificate chain.
 
