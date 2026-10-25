@@ -1,0 +1,22 @@
+{
+  "clean": {
+    "exit": 0,
+    "expected_pass": true,
+    "result": "PASS"
+  },
+  "custom": {
+    "exit": 1,
+    "expected_pass": false,
+    "result": "PASS"
+  },
+  "sorry": {
+    "exit": 1,
+    "expected_pass": false,
+    "result": "PASS"
+  },
+  "unknown": {
+    "exit": 1,
+    "expected_pass": false,
+    "result": "PASS"
+  }
+}

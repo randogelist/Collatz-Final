@@ -1,0 +1,16 @@
+name = "collatz-finite-witness"
+version = "0.1.0"
+defaultTargets = ["CrownMain", "RawSearch", "MatrixObstruction", "collatzSearch"]
+
+[[lean_lib]]
+name = "CrownMain"
+
+[[lean_lib]]
+name = "RawSearch"
+
+[[lean_lib]]
+name = "MatrixObstruction"
+
+[[lean_exe]]
+name = "collatzSearch"
+root = "SearchMain"

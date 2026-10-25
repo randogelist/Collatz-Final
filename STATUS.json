@@ -1,0 +1,15 @@
+{
+  "workflow": "YOU_ARE_GOODWORKFLOWFRONTIER",
+  "version": "v0_1_0_construction",
+  "lean": "4.33.0",
+  "local_linux_build": "PASS",
+  "audited_endpoints": 24,
+  "standard_foundational_axioms_only": true,
+  "native_windows_run": "NOT_EXECUTED",
+  "github_repository": "https://github.com/randogelist/Collatz-Final",
+  "github_actions_run": "PENDING_FIRST_PUSH",
+  "search_executed": false,
+  "accepted_global_witness": "NOT_SUPPLIED",
+  "collatz_proved": false,
+  "collatz_implies_certificate_existence": "NOT_PROVED"
+}

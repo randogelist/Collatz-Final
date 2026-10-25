@@ -1,0 +1,127 @@
+{
+  "workflow": "YOU_ARE_GOODWORKFLOWFRONTIER",
+  "version": "v0_1_0_construction",
+  "build": "PASS",
+  "axiom_audit": "PASS",
+  "compiler": {
+    "version": "Lean (version 4.33.0, x86_64-unknown-linux-gnu, commit d8b18978322de05a8f3dba51ef03cf5461676c17, Release)",
+    "core_olean_sha256": "007815d10b209621f4c788025155a33016c5ab15bbf25566aa72c11a1ce14c6a",
+    "compiler_sha256": "e8baaa71855a616dc351028f3ad2200051b0671f423a1696a100e809302d5550",
+    "launcher_sha256": "692a528603542c400063b41720bf11eb72cf317b2cce97e322463b2e0490fb13",
+    "shared_library_sha256": "0a9e4faadecee5f50232d46c92fcc6524c6ec5842d39279d1658bbe0bc8b986d",
+    "explicit_environment": {
+      "LD_PRELOAD": "",
+      "LD_LIBRARY_PATH": "",
+      "LEAN_SYSROOT": "",
+      "LEAN_NUM_THREADS": ""
+    },
+    "environment_file_sha256": {
+      "/workspace/toolchains/compat/self_exe.so": "59fe707aea18f065798ea3b028ddafc70b0bf4be5816edb39ec4c6ad19de1712"
+    },
+    "platform": "linux",
+    "machine": "x86_64",
+    "flags": [
+      "-j",
+      "2"
+    ],
+    "build_script_sha256": "0fdc1bd1cd4b6dce8c38d2859c83cd1d579e6b8ae87056650c3e3c0238a4cef8",
+    "lean_path_policy": "project build output only; implicit compiler core path"
+  },
+  "compiled": [
+    "MatrixWitness",
+    "SearchMain"
+  ],
+  "frozen_reused": [
+    "Definitions",
+    "FiniteAlgebra",
+    "Dynamics",
+    "CrownMain",
+    "MatrixObstruction",
+    "RawSearch"
+  ],
+  "modules": {
+    "Definitions": {
+      "state": "frozen_reused",
+      "source_sha256": "58159983c55b0f2f17eb7401fa64fc61c28aa0be7bd199ec21533fb0e66cb445",
+      "output_sha256": "7813dcad1f884c8f02bdfda389a4fd1f0b4ec3a39ce3cf01580e79841a861b83",
+      "fingerprint": "6c253f0716102f9ba4b1043daacb6289605683a43f29e8773386153247be4b26"
+    },
+    "FiniteAlgebra": {
+      "state": "frozen_reused",
+      "source_sha256": "18ba020790ab039e93b5b84c49d57842b876b56ef1e5a9e1e961ebd180c88919",
+      "output_sha256": "d5fb28d207e4db03c20aa5572d197f352a3ddf8654fc68f230d7113ea3c9da1d",
+      "fingerprint": "f454943452598d4ca2a09d89a5d70c54da1b561b02af1faa1e494623734ac967"
+    },
+    "MatrixWitness": {
+      "state": "compiled",
+      "source_sha256": "8083d77a2fc4c3606c42390b940b818b6c1b928a0a68f8877be2193f4164035f",
+      "output_sha256": "2a35821bad83cbd7859a4d7180c1e9e222d1235117b782961144a7d575988fc0",
+      "fingerprint": "851a9221cbcf68f685c3c425b22fc8d4fae7e738bebffa36fc82fb497c00f886"
+    },
+    "Dynamics": {
+      "state": "frozen_reused",
+      "source_sha256": "ca15781d9ab75b60a1fb53a5a8d780ef14c48b2237467b554529cd011414580d",
+      "output_sha256": "99feadc52194ca88a47676ceba8f2cc5a025557549600c4d28404998d09d08c5",
+      "fingerprint": "b3a37d4aeb46d68516e66c81eec0a3df5822ff9ef0ed27bbcf14eb9602bb2008"
+    },
+    "CrownMain": {
+      "state": "frozen_reused",
+      "source_sha256": "d1833ddd274085f1db5c0114c52bd1871cf24d4297c05d9a8fa02187fc0df39e",
+      "output_sha256": "6487235a368cb664a7648c73aa2b86d31c6de6e216f446b3211e868ba721e5bd",
+      "fingerprint": "749fe07822a043e2db7256f46da42152c2b1f844bcf5a44f9222957a59a4a87d"
+    },
+    "MatrixObstruction": {
+      "state": "frozen_reused",
+      "source_sha256": "0fbdbb4867fa237b3a0cff0062d5557724b6c95b19d254676b9504da040c4f97",
+      "output_sha256": "e086137f54f5bbb42110269a47eb85da4b0f775902184d1ce72ec90c51d00b69",
+      "fingerprint": "e04bef2e75f97e01294cf17688bb45890d06fbda0a200c2af86f6998d7d9afc4"
+    },
+    "RawSearch": {
+      "state": "frozen_reused",
+      "source_sha256": "fd7dc40c144d7a86c7291edc1007330b8cdfe988da6669f199d050e20046f9e4",
+      "output_sha256": "4e34630266caeeb72e65956b848fabcc210abbfdf2a72d6e747b0ff2dba8a17b",
+      "fingerprint": "a080e1e2f9ad8803e33be80f31156f8ba9dc6fae1771872f26eb4f994e06dd6a"
+    },
+    "SearchMain": {
+      "state": "compiled",
+      "source_sha256": "bde195909599a9722a4de650ee5c29a53438471af1928b0c640edc96381e3116",
+      "output_sha256": "6bda5a60bb8e114745c64e967b207997eb506718170de8223e089d6d64a4e890",
+      "fingerprint": "35b01b3a60ac4a369ec8ad606f726396d4d8574d43f8380c65bcc791c436105b"
+    }
+  },
+  "endpoints": [
+    "CollatzFiniteWitness.check_iff",
+    "CollatzFiniteWitness.ranking_implies_collatz",
+    "CollatzFiniteWitness.WITNESS_IMPLIES_COLLATZ",
+    "CollatzFiniteWitness.CHECKER_SOUND",
+    "CollatzFiniteWitness.FINITE_WITNESS_IMPLIES_COLLATZ",
+    "CollatzFiniteWitness.SCALAR_CHECKER_REJECTS",
+    "CollatzFiniteWitness.ACCEPTED_DIMENSION_POSITIVE",
+    "CollatzFiniteWitness.ACCEPTED_EXISTS_IFF_POSITIVE_DIMENSION",
+    "CollatzFiniteWitness.THREE_SCALAR_ROWS_IMPOSSIBLE",
+    "CollatzFiniteWitness.ACCEPTED_REQUIRES_FIRST_ROW_COUPLING",
+    "CollatzFiniteWitness.RawSearch.unpair_pair",
+    "CollatzFiniteWitness.RawSearch.decode_pack",
+    "CollatzFiniteWitness.RawSearch.COUNTABLE_RAW_SEARCH",
+    "CollatzFiniteWitness.RawSearch.REDUCED_CHECK_EQ_ORIGINAL",
+    "CollatzFiniteWitness.RawSearch.CHECK_CODE_SOUND",
+    "CollatzFiniteWitness.RawSearch.INDEXED_SEARCH_IFF_ORIGINAL_ACCEPTANCE",
+    "CollatzFiniteWitness.RawSearch.ORIGINAL_WITNESS_COVERED",
+    "CollatzFiniteWitness.RawSearch.BOUNDED_SEARCH_SOUND",
+    "CollatzFiniteWitness.RawSearch.ACCEPTED_INDEX_EVENTUALLY_FOUND",
+    "CollatzFiniteWitness.RawSearch.SEARCH_SUCCESS_IFF_ORIGINAL_ACCEPTANCE",
+    "CollatzFiniteWitness.RawSearch.DECODE_POSITIVE_ENTRIES",
+    "CollatzFiniteWitness.RawSearch.INDEXED_SEARCH_IMPLIES_COLLATZ",
+    "CollatzFiniteWitness.RawSearch.RAW_SEARCH_DIMENSIONS_UNBOUNDED",
+    "CollatzFiniteWitness.RawSearch.raw_code_injective"
+  ],
+  "allowed_axioms": [
+    "propext",
+    "Classical.choice",
+    "Quot.sound"
+  ],
+  "accepted_concrete_witness": "NOT_SUPPLIED",
+  "collatz_proved": false,
+  "search_executed": false,
+  "utc_timestamp": "2026-10-25T07:41:19Z"
+}

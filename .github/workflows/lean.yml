@@ -1,0 +1,76 @@
+name: Lean 4.33 kernel and axiom audit
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: lean-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  kernel-audit:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    env:
+      LEAN_VERSION: '4.33.0'
+      LEAN_ARCHIVE_SHA256: '4b3fb03c29a1e0a253fb1d11f9bae3725f19a0dc6fc09b3ea16d2c9df3349e2c'
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+      - name: Restore pinned Lean release
+        id: lean-cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/collatz-lean/lean-4.33.0-linux
+          key: lean-linux-x64-4.33.0-4b3fb03c29a1e0a253fb1d11f9bae3725f19a0dc6fc09b3ea16d2c9df3349e2c
+      - name: Install official Lean 4.33.0 release
+        if: steps.lean-cache.outputs.cache-hit != 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$HOME/.cache/collatz-lean"
+          curl --fail --location --retry 3 \
+            "https://github.com/leanprover/lean4/releases/download/v${LEAN_VERSION}/lean-${LEAN_VERSION}-linux.tar.zst" \
+            --output "$RUNNER_TEMP/lean.tar.zst"
+          echo "${LEAN_ARCHIVE_SHA256}  $RUNNER_TEMP/lean.tar.zst" | sha256sum --check --strict
+          tar --zstd -xf "$RUNNER_TEMP/lean.tar.zst" -C "$HOME/.cache/collatz-lean"
+      - name: Select pinned compiler
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo "$HOME/.cache/collatz-lean/lean-${LEAN_VERSION}-linux/bin" >> "$GITHUB_PATH"
+      - name: Restore project compilation cache
+        uses: actions/cache@v4
+        with:
+          path: .build/linux
+          key: collatz-olean-${{ runner.os }}-4.33.0-${{ hashFiles('**/*.lean', 'scripts/build.py', 'scripts/modules.txt') }}
+          restore-keys: |
+            collatz-olean-${{ runner.os }}-4.33.0-
+      - name: Compile and audit exact endpoints
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 scripts/build.py
+      - name: Test fail-closed axiom gate
+        run: python3 scripts/test_axiom_guard.py
+      - name: Retain compiler, provenance and axiom audit receipts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lean-kernel-audit-${{ github.sha }}
+          include-hidden-files: true
+          path: |
+            .build/logs/
+            .build/receipt.json
+            .build/source-provenance.json
+            .build/toolchain-provenance.json
+            .build/AxiomAudit.lean
+            .build/guard-selftest/*.log
+            .build/guard-selftest/receipt.json
+          if-no-files-found: warn
+          retention-days: 30

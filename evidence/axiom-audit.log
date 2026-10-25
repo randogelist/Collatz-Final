@@ -1,0 +1,31 @@
+'CollatzFiniteWitness.check_iff' depends on axioms: [propext, Quot.sound]
+'CollatzFiniteWitness.ranking_implies_collatz' depends on axioms: [propext, Quot.sound]
+'CollatzFiniteWitness.WITNESS_IMPLIES_COLLATZ' depends on axioms: [propext, Quot.sound]
+'CollatzFiniteWitness.CHECKER_SOUND' depends on axioms: [propext, Quot.sound]
+'CollatzFiniteWitness.FINITE_WITNESS_IMPLIES_COLLATZ' depends on axioms: [propext, Quot.sound]
+'CollatzFiniteWitness.SCALAR_CHECKER_REJECTS' depends on axioms: [propext, Quot.sound]
+'CollatzFiniteWitness.ACCEPTED_DIMENSION_POSITIVE' depends on axioms: [propext, Quot.sound]
+'CollatzFiniteWitness.ACCEPTED_EXISTS_IFF_POSITIVE_DIMENSION' depends on axioms: [propext, Quot.sound]
+'CollatzFiniteWitness.THREE_SCALAR_ROWS_IMPOSSIBLE' depends on axioms: [propext, Quot.sound]
+'CollatzFiniteWitness.ACCEPTED_REQUIRES_FIRST_ROW_COUPLING' depends on axioms: [propext, Classical.choice, Quot.sound]
+'CollatzFiniteWitness.RawSearch.unpair_pair' depends on axioms: [propext, Quot.sound]
+'CollatzFiniteWitness.RawSearch.decode_pack' depends on axioms: [propext, Quot.sound]
+'CollatzFiniteWitness.RawSearch.COUNTABLE_RAW_SEARCH' depends on axioms: [propext, Quot.sound]
+'CollatzFiniteWitness.RawSearch.REDUCED_CHECK_EQ_ORIGINAL' depends on axioms: [propext, Classical.choice, Quot.sound]
+'CollatzFiniteWitness.RawSearch.CHECK_CODE_SOUND' depends on axioms: [propext, Classical.choice, Quot.sound]
+'CollatzFiniteWitness.RawSearch.INDEXED_SEARCH_IFF_ORIGINAL_ACCEPTANCE' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'CollatzFiniteWitness.RawSearch.ORIGINAL_WITNESS_COVERED' depends on axioms: [propext, Classical.choice, Quot.sound]
+'CollatzFiniteWitness.RawSearch.BOUNDED_SEARCH_SOUND' depends on axioms: [propext, Quot.sound]
+'CollatzFiniteWitness.RawSearch.ACCEPTED_INDEX_EVENTUALLY_FOUND' depends on axioms: [propext, Quot.sound]
+'CollatzFiniteWitness.RawSearch.SEARCH_SUCCESS_IFF_ORIGINAL_ACCEPTANCE' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'CollatzFiniteWitness.RawSearch.DECODE_POSITIVE_ENTRIES' depends on axioms: [propext]
+'CollatzFiniteWitness.RawSearch.INDEXED_SEARCH_IMPLIES_COLLATZ' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'CollatzFiniteWitness.RawSearch.RAW_SEARCH_DIMENSIONS_UNBOUNDED' depends on axioms: [propext, Quot.sound]
+'CollatzFiniteWitness.RawSearch.raw_code_injective' depends on axioms: [propext, Quot.sound]
+AXIOM_WHITELIST_PASS: 24 endpoints; allowed propext Classical.choice Quot.sound

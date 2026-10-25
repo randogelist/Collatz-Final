@@ -1,0 +1,100 @@
+{
+  "source_archive": "COLLATZ_CROWN_QM28_FRONTIER_ALGEBRA_LEAN_v0_10_0_HEAVY242_MERGE8192 (1).zip",
+  "core_files": [
+    {
+      "path": "Definitions.lean",
+      "sha256": "58159983c55b0f2f17eb7401fa64fc61c28aa0be7bd199ec21533fb0e66cb445",
+      "unchanged": true
+    },
+    {
+      "path": "FiniteAlgebra.lean",
+      "sha256": "18ba020790ab039e93b5b84c49d57842b876b56ef1e5a9e1e961ebd180c88919",
+      "unchanged": true
+    },
+    {
+      "path": "MatrixWitness.lean",
+      "sha256": "8083d77a2fc4c3606c42390b940b818b6c1b928a0a68f8877be2193f4164035f",
+      "unchanged": true
+    },
+    {
+      "path": "Dynamics.lean",
+      "sha256": "ca15781d9ab75b60a1fb53a5a8d780ef14c48b2237467b554529cd011414580d",
+      "unchanged": true
+    },
+    {
+      "path": "CrownMain.lean",
+      "sha256": "d1833ddd274085f1db5c0114c52bd1871cf24d4297c05d9a8fa02187fc0df39e",
+      "unchanged": true
+    }
+  ],
+  "input_archives": [
+    {
+      "name": "01-COLLATZ_DAGGER_MAZUR_REGULARITY_LEAN_v0_1_6_FIX6-1-.zip",
+      "sha256": "d4a2f60f789f83e57b017cf5d7d278d253bc0aa2828d79c011c840237e0ae150"
+    },
+    {
+      "name": "02-COLLATZ_HEAVY_PREFIX_COUNT_LEAN_v0_5_0-1-.zip",
+      "sha256": "d2e6cde9579c083a0c8df84032899725c6a4a5aced4bf70c2092a6f076e40f9a"
+    },
+    {
+      "name": "03-COLLATZ_DAGGER_PARTITION_MAZUR_LEAN_v0_1_0_FIX1-1-.zip",
+      "sha256": "45974406c67c5a7d1f50d90c60b64ccfca988cbb7ea6779e8733c514d22cbb18"
+    },
+    {
+      "name": "04-COLLATZ_DAGGER_QM28_EQUIVALENCE_LEAN_v0_2_1_FIX1-1-.zip",
+      "sha256": "374580503bdeaf0170d8a30d97dae27364b2f82159de98b40c02a8c37248ebf4"
+    },
+    {
+      "name": "05-COLLATZ_CBC_PACKET_LEAN_v0_3_0_EQUIVALENCE-4-.zip",
+      "sha256": "71fa7a34eccd051af472b99c30f61e605a7575cc094e1d65b07ed11ec93dfcd9"
+    },
+    {
+      "name": "06-COLLATZ_DAGGER_PARTITION_MAZUR_LEAN_v0_1_5_FIX5-1-.zip",
+      "sha256": "833306e636f00802db438dc84a15356206022136b9a041b1086207e34a41062a"
+    },
+    {
+      "name": "07-COLLATZ_DAGGER_WEIGHTED_CLOSURE_LEAN_v0_2_1_FIX1-2-.zip",
+      "sha256": "340340211ffe0317388456a3a6733a80d7199993997de7d82e91461134aa7358"
+    },
+    {
+      "name": "08-COLLATZ_MONKS_DAGGER_CARRIER_LEAN_v0_1_3_FIX3.zip",
+      "sha256": "10ee246d84e6b60de731d8a4460b7018d061f4603c1d70acbf9ea2cc1a69b4d9"
+    },
+    {
+      "name": "09-COLLATZ_CROWN_QM28_AFFINE_RETURN_ORIENTATION_LEAN_v0_7_1_FIX1.zip",
+      "sha256": "9547c178599272ef35ec353dd83c0874ba35712d3c79e48d75741480cc0895f2"
+    },
+    {
+      "name": "10-COLLATZ_CROWN_QM28_FRONTIER_ALGEBRA_LEAN_v0_10_0_HEAVY242_MERGE8192-1-.zip",
+      "sha256": "3df2a8cebaa0d6a4e90e81b1be446fc5684376f3f109d672ffbe0a2496d16a66"
+    },
+    {
+      "name": "11-COLLATZ_CROWN_ROW_MECHANICS_LEAN_v0_8_0-1-.zip",
+      "sha256": "3e8df6800a763c811d93002d3c83604eaf22f1b7932a0fac189d512a2d07da5c"
+    },
+    {
+      "name": "12-COLLATZ_DIRECT_BASIN_PATHWAY_LEAN_v0_1_0_FIX3.zip",
+      "sha256": "c2f26177269d39f57398494ee57dc03d7e3abb9e7e24fb59e1a3fa563d1dd71a"
+    },
+    {
+      "name": "13-COLLATZ_POINCARE_COMPACT_SEARCH_CPU_v0_3_0_FRONTIER_OUTER_PRUNE-2-.zip",
+      "sha256": "696fab17f073b585cf4acba3199b2cd0ed13b46662462fd570855a3b7a464d55"
+    },
+    {
+      "name": "14-COLLATZ_R34_ADAPTIVE_CHECKER_LEAN_v0_4_4_FIX4-2-.zip",
+      "sha256": "380c9dbf92e4e879f6c883cc281c58bf4be9da71bef722ab8dcd4d80482bdb1d"
+    },
+    {
+      "name": "15-COLLATZ_TWOMAP_AFFINE_RATIONAL_HEIGHT_SCOUT_v0_4_0-2-.zip",
+      "sha256": "6bb5350e65d53700f01ab0ac56fe3f40a68ac87d312d3c5e8feb3531007b7889"
+    },
+    {
+      "name": "16-COLLATZ_MAZUR_FRONTIER_ZERO_DENSITY_ATIER_LEAN_v0_2_0_REBUILT-2-.zip",
+      "sha256": "81ba476aac0c85952ecf3f7e4e1cb2c6138614810bd62784689929aec65a0b68"
+    },
+    {
+      "name": "17-YOU_ARE_GOODWORKFLOWFRONTIER_WORKFLOW_DEFINITION_v1_0_15-1-.txt",
+      "sha256": "9cd05b3c8ef50fc1efab4760ccc5b08531ada72820aa76e8c8a67f32ffea017e"
+    }
+  ]
+}

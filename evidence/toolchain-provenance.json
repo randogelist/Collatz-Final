@@ -1,0 +1,24 @@
+{
+  "version": "Lean (version 4.33.0, x86_64-unknown-linux-gnu, commit d8b18978322de05a8f3dba51ef03cf5461676c17, Release)",
+  "core_olean_sha256": "007815d10b209621f4c788025155a33016c5ab15bbf25566aa72c11a1ce14c6a",
+  "compiler_sha256": "e8baaa71855a616dc351028f3ad2200051b0671f423a1696a100e809302d5550",
+  "launcher_sha256": "692a528603542c400063b41720bf11eb72cf317b2cce97e322463b2e0490fb13",
+  "shared_library_sha256": "0a9e4faadecee5f50232d46c92fcc6524c6ec5842d39279d1658bbe0bc8b986d",
+  "explicit_environment": {
+    "LD_PRELOAD": "",
+    "LD_LIBRARY_PATH": "",
+    "LEAN_SYSROOT": "",
+    "LEAN_NUM_THREADS": ""
+  },
+  "environment_file_sha256": {
+    "/workspace/toolchains/compat/self_exe.so": "59fe707aea18f065798ea3b028ddafc70b0bf4be5816edb39ec4c6ad19de1712"
+  },
+  "platform": "linux",
+  "machine": "x86_64",
+  "flags": [
+    "-j",
+    "2"
+  ],
+  "build_script_sha256": "0fdc1bd1cd4b6dce8c38d2859c83cd1d579e6b8ae87056650c3e3c0238a4cef8",
+  "lean_path_policy": "project build output only; implicit compiler core path"
+}
