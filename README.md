@@ -3,7 +3,7 @@
 Formal reductions of ordinary Collatz in Lean 4.33.0.
 
 [Finite-witness PDF](docs/preprint/collatz-preprint.pdf) ·
-[Mazur PDF](docs/preprint/mazur-preprint.pdf) ·
+[MAOZUR PDF](docs/preprint/MAOZUR_ALGEBRA_PREPRINT_v0_1_3_CENTERED_BOLD_133.pdf) ·
 [Sources](docs/preprint/)
 
 **Finite-witness CI:** 8 modules · 24 axiom-audited endpoints.
