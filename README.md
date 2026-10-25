@@ -2,6 +2,9 @@
 
 Formal reductions of ordinary Collatz in Lean 4.33.0.
 
+[Preprint (PDF)](docs/preprint/collatz-preprint.pdf) ·
+[LaTeX source](docs/preprint/collatz-preprint.tex)
+
 **Verified in CI:** 8 modules · 24 axiom-audited endpoints.
 
 ## Accomplishments
@@ -16,8 +19,8 @@ $$
 \Longrightarrow \mathrm{Collatz}.
 $$
 
-**Open:** an accepted witness and the converse from Collatz to certificate
-existence. Enumeration alone does not guarantee success.
+**Remaining goal:** produce one accepted finite witness. The forward implication
+is sufficient; enumeration alone does not guarantee success.
 
 ## Sample runner output
 

@@ -1,0 +1,439 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[a4paper,margin=24mm,headheight=14pt,headsep=8mm,footskip=12mm]{geometry}
+\usepackage{amsmath,amssymb,amsthm,booktabs,array,enumitem,microtype}
+\usepackage{xcolor,fancyhdr,hyperref}
+\definecolor{ink}{RGB}{30,51,75}
+\hypersetup{colorlinks=true,linkcolor=ink,urlcolor=ink,citecolor=ink,
+pdftitle={A finite-witness architecture for ordinary Collatz},
+pdfauthor={Collatz-Final project},
+pdfsubject={Lean-verified soundness, countable certificate search, and conditional limit exchange}}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{5.5pt}
+\setlist{nosep,leftmargin=1.6em}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\textsc{Collatz-Final}}
+\fancyhead[R]{\small Working preprint v0.1}
+\fancyfoot[C]{\small\thepage}
+\renewcommand{\headrulewidth}{0.35pt}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newcommand{\NN}{\mathbb N}
+\newcommand{\CC}{\mathsf{Collatz}}
+\newcommand{\chk}{\mathsf{check}}
+\newcommand{\ck}{\mathsf{checkCode}}
+\newcommand{\finda}{\mathsf{findAccepted}}
+\newcommand{\Raw}{\mathsf{RawWitness}}
+\newcommand{\one}{\mathbf 1}
+\newcommand{\name}[1]{{\small\texttt{#1}}}
+\newcommand{\source}[1]{\par{\footnotesize\color{ink}Lean declarations: #1.}\par}
+\newcommand{\smallurl}[2]{\href{#1}{#2}}
+\begin{document}
+\thispagestyle{plain}
+{\small\textsc{Working preprint}\hfill 25 October 2026\par}
+\vspace{5mm}
+{\LARGE\bfseries A finite-witness architecture\\[2pt] for ordinary Collatz\par}
+\vspace{3mm}
+{\large Countable certificate search and conditional limit exchange\par}
+\vspace{4mm}
+{\normalsize Collatz-Final project\par}
+{\small\href{https://github.com/randogelist/Collatz-Final}{github.com/randogelist/Collatz-Final}\par}
+\vspace{4mm}
+\begin{abstract}
+We document a sufficient finite-certificate route to the ordinary Collatz
+conjecture. A terminating checker tests natural affine matrix interpretations
+of a seven-symbol mixed binary--ternary rewriting system. The repository
+proves in Lean that acceptance implies Collatz, serializes every accepted
+certificate into a natural-number search space, and proves that symbolic
+pruning preserves acceptance. The required project architecture is the forward
+implication from accepted-witness existence; a converse is not required.
+No accepted global certificate is supplied. We also describe Frontier A's
+separate dyadic predecessor formulation: two explicitly identified iterated
+limits commute exactly when Collatz holds. That interchange remains an open
+premise, and its supporting source branch is outside the present repository
+CI target.
+\end{abstract}
+
+\section{Main result and scope}
+Throughout, $\NN=\{0,1,2,\ldots\}$. Let
+\[
+ C(n)=
+ \begin{cases}
+ n/2,&n\equiv0\pmod2,\\
+ 3n+1,&n\equiv1\pmod2,
+ \end{cases}
+ \qquad
+ \CC:\ \forall n\ge1,\ \exists t\in\NN,\ C^t(n)=1.
+\]
+For each actual dimension $m\ge1$, let $\mathcal W_m$ be the finite-table
+certificate type defined in Section~2. The Boolean function $\chk$ is total
+and consists entirely of finitely many exact natural-number comparisons.
+
+\begin{theorem}[Finite-witness soundness]\label{thm:main}
+The checked source establishes
+\[
+ \boxed{\bigl(\exists m\ge1,\ \exists W\in\mathcal W_m,\
+                 \chk(W)=\mathrm{true}\bigr)\ \Longrightarrow\ \CC.}
+\]
+\end{theorem}
+\source{\name{CHECKER\_SOUND}; \name{FINITE\_WITNESS\_IMPLIES\_COLLATZ}}
+
+The implication contains no predecessor-density, analytic regularity,
+trajectory-coverage, or termination premise. Its universal arithmetic transfer
+is proved downstream of the finite check. Section~3 gives an exhaustive
+natural-number encoding of this certificate language, and Section~4 removes
+entire impossible families by symbolic proof.
+
+The mathematical goal left by this architecture is concrete: exhibit one
+finite table that passes the checker, and certify its admission in Lean.
+Soundness does not itself establish that such a table exists. This preprint
+reports a conditional proof architecture, not a proof of the Collatz conjecture.
+
+\newpage
+\section{The finite matrix certificate}
+The alphabet is
+\[
+ \Sigma=\{L,R,f,t,0,1,2\}.
+\]
+Its mixed binary--ternary encoding is taken from Yolcu, Aaronson, and
+Heule~\cite{yah}. The following are the eleven oriented rules used by the
+repository:
+\begin{center}
+\begin{tabular}{@{}ll@{}}
+\toprule
+Role & Rules\\
+\midrule
+Dynamics & $fR\to R,\quad tR\to 2R$\\
+Digit transport & $f0\to0f,\quad f1\to0t,\quad f2\to1f$\\
+Digit transport & $t0\to1t,\quad t1\to2f,\quad t2\to2t$\\
+Left boundary & $L0\to Lt,\quad L1\to Lff,\quad L2\to Lft$\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+A certificate $W\in\mathcal W_m$ assigns to every symbol $s$ a matrix
+$M_s\in\NN^{m\times m}$ and a vector $b_s\in\NN^m$.
+Write $F_s(x)=M_sx+b_s$. For a word $w=s_1\cdots s_\ell$, put
+$F_w=F_{s_1}\circ\cdots\circ F_{s_\ell}$; thus the leftmost symbol acts last.
+The empty word is the identity, and compilation uses
+\[
+ (M_A,b_A)\circ(M_B,b_B)=(M_AM_B,\ M_Ab_B+b_A).
+\]
+The checker accepts precisely when
+\begin{align}
+ (M_s)_{00}&\ge1 &&(s\in\Sigma),\label{eq:positive}\\
+ M_{\mathrm{rhs}(r)}&\le M_{\mathrm{lhs}(r)},&
+ b_{\mathrm{rhs}(r)}&\le b_{\mathrm{lhs}(r)}
+ &&\hspace{-10mm}(r\text{ any rule}),\label{eq:weak}\\[-2pt]
+ (b_{2R})_0&<(b_{tR})_0.\label{eq:strict}
+\end{align}
+In \eqref{eq:weak}, both comparisons are entrywise.
+There are $7m^2+7m$ raw coefficients and
+$7+11(m^2+m)+1$ scalar comparisons.
+The propositional interface \name{Check W} is not a field of the raw witness.
+\source{\name{check\_iff}; \name{toRanking}}
+
+\begin{proof}[Proof outline of Theorem~\ref{thm:main}]
+Define $\rho(w)=(F_w(0))_0\in\NN$. Nonnegative coefficients give monotonicity
+in every coordinate; \eqref{eq:positive} preserves strict decrease in coordinate
+zero through every prefix. Hence every rule weakly decreases $\rho$ in every
+prefix and suffix context, while $tR\to2R$ strictly decreases it.
+
+The source constructs binary numerals: $L$ represents $1$, and appending $f$
+or $t$ represents $2n$ or $2n+1$. The nine auxiliary rules normalize
+$3n+j$, $j\in\{0,1,2\}$, preserving the required weak rank inequality.
+For the shortcut map $T(2n)=n$, $T(2n+1)=3n+2$, even steps are weakly
+decreasing and nonbase odd steps are strictly decreasing. Strong induction
+on rank, with structural induction on binary numerals for the even steps,
+proves that every positive numeral reaches $1$. Binary coverage handles
+every positive integer. Finally, each $T$ step is one or two ordinary $C$
+steps, giving the stated conclusion.
+\end{proof}
+\source{\name{ranking\_implies\_collatz}; \name{shortcut\_implies\_full}}
+
+\newpage
+\section{An exhaustive countable search}
+The source convention \name{Witness d} means actual dimension $d+1$.
+After excluding scalars, the executable raw format is simply
+\[
+ \Raw=\NN^3,\qquad R=(q,a,b).
+\]
+Here $q$ selects actual dimension $q+2$, while $a$ and $b$ encode all seven
+matrices and all seven bias vectors. No proposition, proof object, oracle,
+or infinite table is stored in $R$.
+
+Use the pairing map
+\[
+ \pi(u,v)=\frac{(u+v)(u+v+1)}2+u,
+ \qquad
+ \operatorname{code}(q,a,b)=\pi(q,\pi(a,b)).
+\]
+The implementation defines the triangular number recursively and constructs a
+diagonal decoder \name{unpair}. It proves
+$\operatorname{unpair}(\pi(u,v))=(u,v)$. Recursive pairing therefore encodes
+any finite table, with an exact decoding theorem.
+
+The decoder fills each mandatory entry $(M_s)_{00}$ with its stored value
+plus one. Packing an accepted certificate subtracts one from these seven
+entries; positivity makes the reconstruction exact. Let
+$\operatorname{candidate}:\NN\to\Raw$ be the nested decoder. Then
+\[
+ \operatorname{candidate}(\operatorname{code}(R))=R.
+\]
+This proves coverage of all raw candidates. Together with scalar exclusion
+and the coupling guard of Section~4, it also proves coverage of every accepted
+original certificate.
+
+\begin{theorem}[Acceptance-preserving enumeration]
+For the total executable checker $\ck$,
+\[
+ \boxed{
+ \bigl(\exists n\in\NN,\ \ck(n)=\mathrm{true}\bigr)
+ \ \Longleftrightarrow\
+ \bigl(\exists m\ge1,\ \exists W\in\mathcal W_m,\
+                      \chk(W)=\mathrm{true}\bigr).}
+\]
+Consequently, $(\exists n,\ \ck(n)=\mathrm{true})\Longrightarrow\CC$.
+\end{theorem}
+\source{\name{INDEXED\_SEARCH\_IFF\_ORIGINAL\_ACCEPTANCE};
+\name{INDEXED\_SEARCH\_IMPLIES\_COLLATZ}}
+
+\begin{proof}
+An accepted index decodes to an accepted matrix table. Conversely, every
+accepted table is nonscalar, packs into the raw format, and is recovered by
+decoding. The guard rejects no accepted table. Apply Theorem~\ref{thm:main}.
+\end{proof}
+
+The bounded routine checks the prefix below its bound, starting from the
+largest index:
+\[
+ \finda(0)=\mathrm{none},\qquad
+ \finda(b+1)=
+ \begin{cases}
+ \mathrm{some}(b),&\ck(b)=\mathrm{true},\\
+ \finda(b),&\text{otherwise}.
+ \end{cases}
+\]
+The source proves both
+\begin{align*}
+ \finda(b)=\mathrm{some}(n)&\ \Longrightarrow\
+                 n<b\ \land\ \ck(n)=\mathrm{true},\\
+ \ck(n)=\mathrm{true}&\ \Longrightarrow\
+                 \finda(n+1)=\mathrm{some}(n).
+\end{align*}
+Thus a finite search succeeds exactly when this certificate language has an
+accepted witness. Exhaustiveness is language-relative; it is not a guarantee
+of success. The reference decoder is intentionally transparent and may be
+impractical on large codes. No search-performance claim is made.
+
+\newpage
+\section{Symbolic reductions of the witness space}
+The exclusions below are proved for all coefficient values. They do not
+result from testing a bounded list of candidates.
+
+\begin{proposition}[Scalar obstruction]
+No one-dimensional natural affine interpretation passes the checker.
+\end{proposition}
+\begin{proof}
+Let $a,b,f,t,u$ be the slopes for $L,R,f,t,2$, respectively.
+Write $\beta_s$ for the bias of symbol $s$.
+The odd rule and the $L2$ rule imply
+\begin{align*}
+ ub&\le tb,& aft&\le au,\\
+ a(f\beta_t+\beta_f)+\beta_L&\le a\beta_2+\beta_L,\\
+ u\beta_R+\beta_2&<t\beta_R+\beta_t.
+\end{align*}
+Since $a,b,f\ge1$, cancellation and nonnegativity give
+\[
+ u\le t\le ft\le u.
+\]
+Therefore $u=t$. The weak bias inequality gives
+$\beta_t\le f\beta_t+\beta_f\le\beta_2$, whereas the strict odd inequality
+gives $\beta_2<\beta_t$. This is a contradiction.
+\end{proof}
+\source{\name{SCALAR\_CHECKER\_REJECTS};
+\name{ACCEPTED\_DIMENSION\_POSITIVE}}
+
+\begin{proposition}[Necessary coupling]
+Every accepted certificate has
+\[
+ \exists s\in\{L,t,2\},\ \exists j>0:\ (M_s)_{0j}>0.
+\]
+\end{proposition}
+\begin{proof}
+Suppose instead that the first rows of $M_L,M_t,M_2$ have no off-diagonal
+entries. Their first coordinates then behave as scalar affine maps.
+The remaining contributions from $M_f$ and $b_f$ are nonnegative and may
+be discarded to obtain the scalar inequalities used above. The same
+contradiction follows. No isolation condition is imposed on $M_f$, $M_R$,
+or the other rows.
+\end{proof}
+\source{\name{THREE\_SCALAR\_ROWS\_IMPOSSIBLE};
+\name{ACCEPTED\_REQUIRES\_FIRST\_ROW\_COUPLING}}
+
+In particular, every fully diagonal interpretation is excluded.
+Let $G(W)$ be the finite Boolean test of the displayed coupling condition.
+The reduced checker satisfies the exact identity
+\[
+ G(W)\mathbin{\&\&}\chk(W)=\chk(W).
+\]
+The raw search therefore starts at dimension two, enforces the seven positive
+leading entries by construction, and applies $G$ before the full checker.
+These reductions preserve all accepted original certificates; no claim of
+optimality or global minimality is made.
+
+\subsection*{The remaining finite problem}
+For some dimension $m\ge2$, find seven natural matrices and seven natural
+vectors satisfying \eqref{eq:positive}--\eqref{eq:strict}. This one accepted
+table would suffice for ordinary Collatz by the proved transfer.
+A search engine may propose it, but admission must be checked for the exact
+data and connected to the audited theorem. At the source snapshot documented
+here, no such global witness has been supplied.
+
+\newpage
+\section{Frontier A: conditional limit-exchange closure}
+This section concerns the separate supporting archive~\cite{frontier}, not the
+eight-module CI target. The construction uses the actual ordinary map $C$.
+
+Let $B=\{n\ge1:\forall t,\ C^t(n)\ne1\}$. For $n>1$, define
+\[
+ \tau(n)=\min\{t:(C^t(n))^2\le n\}
+\]
+when that set is nonempty. Put $J(n)=C^{\tau(n)}(n)$ in that case, and
+$J(n)=0$ otherwise; set $J(0)=0$, $J(1)=1$.
+Zero marks genuine failure of a crossing, not a finite computational timeout.
+For successful restarts of $n>1$, the arithmetic proof gives
+\[
+ 0<J(n),\qquad J(n)^2\le n<4J(n)^2,\qquad J(n)<n.
+\]
+Define
+\[
+ A_k=\{n\ge1:J^k(n)=0\},
+ \qquad U_c(j,k)=\one_{A_k}(2^jc)\quad(c\ge1).
+\]
+The sets $A_k$ increase, and $\bigcup_k A_k=B$: successful restarts of a bad
+integer remain bad and strictly decrease, so they cannot continue forever;
+good integers cannot encounter a failed restart.
+
+\begin{theorem}[Both limit values]
+For every positive $c$,
+\[
+ \lim_{j\to\infty}\lim_{k\to\infty}U_c(j,k)=\one_B(c),
+ \qquad
+ \lim_{k\to\infty}\lim_{j\to\infty}U_c(j,k)=0.
+\]
+\end{theorem}
+\begin{proof}
+The identity $C^j(2^jc)=c$ makes $2^jc$ bad exactly when $c$ is bad.
+For each fixed $j$, monotone absorption therefore eventually equals
+$\one_B(c)$ as $k$ increases.
+
+For $P_c=\{n\ge1:\exists t,\ C^t(n)=c\}$, the supporting source proves
+\[
+ n\in P_c\cap A_k\quad\Longrightarrow\quad n<(2c)^{2^k}.
+\]
+Thus $U_c(j,k)=1$ requires $2^jc<(2c)^{2^k}$. For each fixed $k$, this
+fails at all sufficiently large $j$. One explicit sufficient cutoff in the
+source is $j\ge(2c)^{2^k}$. The two outer limits are consequently constant.
+\end{proof}
+\source{\name{DEPTH\_THEN\_TOWER\_LIMIT};
+\name{TOWER\_THEN\_DEPTH\_LIMIT} in \name{CollatzNativeLimits}}
+
+\begin{theorem}[Conditional closure]
+Equality of these two iterated limits for every $c\ge1$ is equivalent to $\CC$.
+\end{theorem}
+\begin{proof}
+Equality forces $\one_B(c)=0$ for every positive $c$. Conversely, $\CC$ makes
+the entire array zero.
+\end{proof}
+
+\textbf{The interchange premise remains unproved.}
+Lean represents these limits by exact eventual equality of natural-valued
+sequences; the ordinary real-limit interpretation follows for values $0,1$.
+The restart and absorption predicates are noncomputable. This tower theorem
+has no predecessor-density input. The original harmonic Frontier A instead
+retains that separate input; these two formulations must not be conflated.
+
+\newpage
+\section{Verification record and reproducibility}
+\begingroup\small
+The main certificate chain was checked by GitHub Actions using Lean 4.33.0.
+The pinned compiler and source snapshot for this preprint are:
+\begin{quote}\small\ttfamily
+Compiler: d8b18978322de05a8f3dba51ef03cf5461676c17\\
+Source: \phantom{ab}f317167a55f7c6b5a815837f5a84a3c693946744
+\end{quote}
+Run \href{https://github.com/randogelist/Collatz-Final/actions/runs/40175415091}
+{40175415091} completed successfully: eight modules compiled, 24 endpoints
+passed the transitive axiom audit, and four audit-guard tests passed.
+The allowed foundational dependencies are \name{propext},
+\name{Classical.choice}, and \name{Quot.sound}. No research axiom or
+\name{sorryAx} is allowed by the audit.
+
+\begin{center}
+\begin{tabular}{@{}p{.58\textwidth}p{.34\textwidth}@{}}
+\toprule
+Claim & Evidence scope\\
+\midrule
+Accepted finite witness implies ordinary Collatz & Current repository CI\\
+Indexed acceptance iff matrix-certificate acceptance & Current repository CI\\
+Scalar exclusion and coupling guard & Current repository CI\\
+Bounded-search soundness and coverage & Current repository CI\\
+Frontier A limit identities and conditional equivalence & Supporting archive; outside current CI\\
+An accepted global certificate & Not supplied\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The eight modules are:
+\begin{quote}\small\ttfamily
+Definitions, FiniteAlgebra, MatrixWitness, Dynamics,\\
+CrownMain, MatrixObstruction, RawSearch, SearchMain.
+\end{quote}
+The workflow installs a checksum-pinned Lean release, validates compatible
+cache entries, performs a fresh endpoint audit, and retains receipts.
+Assistant-run Lean checks use CI only.
+
+\subsection*{Observed runner output}
+The following lines are from the successful run above, with their common
+version prefix omitted:
+\begin{quote}\footnotesize\ttfamily
+ACCEPTED\_WITNESS\_EXISTS\_IMPLIES\_COLLATZ=PROVED\\
+COLLATZ\_IMPLIES\_ACCEPTED\_WITNESS\_EXISTS=NOT\_PROVED\\
+ACCEPTED\_WITNESS\_EXISTS\_IFF\_COLLATZ=NOT\_ESTABLISHED\\
+ACCEPTED\_CONCRETE\_WITNESS=NOT\_SUPPLIED
+\end{quote}
+The project requires only the proved forward implication. Its remaining task
+is an accepted global witness.
+
+{\raggedright
+\begin{thebibliography}{9}\small
+\bibitem{yah}
+E. Yolcu, S. Aaronson, and M. J. H. Heule.
+\emph{An Automated Approach to the Collatz Conjecture}.
+arXiv:2105.14697, 2021; version 3, 2022.
+\href{https://arxiv.org/abs/2105.14697}{arxiv.org/abs/2105.14697}.
+Source of the mixed binary--ternary encoding.
+
+\bibitem{repo}
+Collatz-Final project.
+\emph{Finite-witness countable search: Lean sources and CI receipts}.
+\href{https://github.com/randogelist/Collatz-Final/tree/f317167a55f7c6b5a815837f5a84a3c693946744}
+{Repository snapshot f317167a55f7}, 25 October 2026.
+Exact theorem names and source provenance appear in the repository.
+
+\bibitem{frontier}
+Collatz-Final project.
+\emph{Frontier A interchange}, supporting source archive, 17 October 2026.
+\name{COLLATZ\_FRONTIER\_A\_INTERCHANGE\_LEAN\_v0\_1\_0.zip}.
+The archive records historical Linux compilation; it does not certify a
+current GitHub run. SHA-256:
+{\scriptsize\texttt{096e6a67666adc00cbe3fdac80d162a1b2d7a8e9670411fe8e0d2b38490833ae}}.
+\end{thebibliography}}
+\endgroup
+\end{document}
+
