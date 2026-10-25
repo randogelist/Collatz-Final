@@ -18,6 +18,96 @@ CollatzFiniteWitness.RawSearch.INDEXED_SEARCH_IMPLIES_COLLATZ
 Here `Collatz` is literally every positive natural number reaching 1 under
 `C n = if n % 2 = 0 then n / 2 else 3 * n + 1`.
 
+## Accomplishments
+
+| Accomplishment | Result and verification scope |
+|---|---|
+| Ordinary Collatz transfer | An accepted finite matrix certificate implies that every positive integer reaches 1 under the ordinary map. CI-verified: `CHECKER_SOUND`. |
+| Finite raw witness format | Three natural numbers encode dimension, matrix entries, and bias entries; the witness has no proof fields or assumed propositions. |
+| Exhaustive countable certificate search | Every accepted certificate in the matrix language occurs at a natural-number index. CI-verified: `INDEXED_SEARCH_IFF_ORIGINAL_ACCEPTANCE`. |
+| Sound bounded search | Every returned index is accepted and below the bound; an accepted index guarantees success at some finite bound. CI-verified: `BOUNDED_SEARCH_SOUND`, `ACCEPTED_INDEX_EVENTUALLY_FOUND`. |
+| Symbolic search-space reductions | Scalar interpretations are impossible; positive leading entries are encoded by construction; a necessary first-row coupling guard preserves every accepted certificate. CI-verified. |
+| Reproducible Lean verification | Lean 4.33.0 on GitHub Actions; eight modules, 24 audited endpoints, and four audit-guard tests passed. |
+| Frontier A: conditional limit-exchange closure | The supporting interchange branch identifies both iterated limits and proves that their equality for every positive target is equivalent to Collatz. The interchange premise remains open; this branch is outside the current eight-module CI target. |
+
+The certificate search is exhaustive for its specified language. Neither an
+accepted global witness nor the converse “Collatz implies a matrix certificate
+exists” has been proved.
+
+## Frontier A — conditional limit-exchange closure
+
+The recovered branch `COLLATZ_FRONTIER_A_INTERCHANGE_LEAN_v0_1_0` gives the
+**dyadic predecessor tower formulation** of Frontier A, using the actual
+ordinary Collatz dynamics.
+
+Let $J$ be the first square-root restart: for $n>1$, take the first ordinary
+orbit value $x$ with $x^2\le n$, or return the failure marker $0$ if no such
+value exists; $J(0)=0$ and $J(1)=1$. Define
+
+$$
+B=\{c\ge1:\text{the ordinary Collatz orbit of }c\text{ never reaches }1\},
+\qquad A_k=\{n\ge1:J^k(n)=0\},
+\qquad U_c(j,k)=\mathbf 1_{A_k}(2^j c).
+$$
+
+For every positive target $c$, the branch proves both limit values:
+
+$$
+\lim_{j\to\infty}\lim_{k\to\infty}U_c(j,k)=\mathbf 1_B(c),
+\qquad
+\lim_{k\to\infty}\lim_{j\to\infty}U_c(j,k)=0.
+$$
+
+At fixed restart depth $k$, the support bound
+$U_c(j,k)=1\Rightarrow 2^j c<(2c)^{2^k}$ makes the tower sequence eventually
+zero. At fixed tower height $j$, absorption eventually stabilizes at
+$\mathbf 1_B(c)$. Lean expresses these limits by exact eventual equality
+of sequences taking values in $\{0,1\}$.
+
+The remaining condition is the **limit-exchange postulate**:
+
+$$
+\left[
+\forall c\ge1,\quad
+\lim_{j\to\infty}\lim_{k\to\infty}U_c(j,k)
+=
+\lim_{k\to\infty}\lim_{j\to\infty}U_c(j,k)
+\right]
+\quad\Longleftrightarrow\quad
+\mathrm{Collatz}.
+$$
+
+The precise declarations in `NativeIteratedLimits.lean`, namespace
+`CollatzNativeLimits`, are `DEPTH_THEN_TOWER_LIMIT`,
+`TOWER_THEN_DEPTH_LIMIT`, `INTERCHANGE_POSTULATE_IMPLIES_COLLATZ`, and
+`INTERCHANGE_POSTULATE_IFF_COLLATZ`.
+
+**Status: conditional closure.** Both iterated limits are identified; their
+interchange is an explicit, unproved theorem premise. Existence of both limits
+does not establish their equality. The actual restart predicate is
+noncomputable, so this is a separate analytic reduction, not an accepted finite
+matrix witness.
+
+The original **harmonic Frontier A** retains the explicit
+`ActualPredecessorDensity` premise:
+
+$$
+\mathrm{ActualPredecessorDensity}
+\quad\land\quad
+\liminf_{N\to\infty}
+\max_{0\le k<K(N)}\mu_N(F_k)=0
+\quad\Longrightarrow\quad
+\mathrm{Collatz},
+$$
+
+where $F_k$ is the layer of starts with $k$ successful restarts followed by
+failure, $\mu_N(S)=H_N^{-1}\sum_{1\le n\le N,\ n\in S}1/n$,
+$H_N=\sum_{n=1}^{N}1/n$, and $K(N)=\min\{k:N<2^{2^k}\}$.
+The tower formulation above needs no predecessor-density assumption.
+
+These Frontier A statements document the supporting branch sources. They are
+not included in this repository's current eight-module CI certification.
+
 ## Finite data and exhaustive enumeration
 
 The source certificate is seven natural matrices and seven natural bias vectors
