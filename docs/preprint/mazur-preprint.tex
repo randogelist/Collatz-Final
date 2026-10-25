@@ -1,0 +1,537 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[a4paper,margin=24mm,headheight=14pt,headsep=8mm,footskip=12mm]{geometry}
+\usepackage{amsmath,amssymb,amsthm,booktabs,array,enumitem,microtype}
+\usepackage{xcolor,fancyhdr,hyperref,xurl}
+\definecolor{ink}{RGB}{30,51,75}
+\hypersetup{colorlinks=true,linkcolor=ink,urlcolor=ink,citecolor=ink,
+pdftitle={Square-root restarts and Mazur density: conditional closure criteria for Collatz},
+pdfauthor={Collatz-Final project},
+pdfsubject={Source reconstruction of fixed-fibre regularity, direct basin bounds, and conditional Collatz closure}}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{5pt}
+\setlist{nosep,leftmargin=1.6em}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\textsc{Collatz-Final}}
+\fancyhead[R]{\small Mazur companion preprint v0.1}
+\fancyfoot[C]{\small\thepage}
+\renewcommand{\headrulewidth}{0.35pt}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newcommand{\NN}{\mathbb N}
+\newcommand{\CC}{\mathsf{Collatz}}
+\newcommand{\MM}{\mathsf M}
+\newcommand{\FF}{\mathsf F}
+\newcommand{\RR}{\mathsf R}
+\newcommand{\Agg}{\mathsf A}
+\newcommand{\Bad}{\mathcal B}
+\newcommand{\Pred}{\mathcal P}
+\newcommand{\source}[1]{\par{\footnotesize\color{ink}Source: #1.}\par}
+\begin{document}
+\thispagestyle{plain}
+{\small\textsc{Working preprint}\hfill 25 October 2026\par}
+\vspace{5mm}
+{\LARGE\bfseries Square-root restarts and Mazur density\par}
+\vspace{3mm}
+{\large Conditional closure criteria for ordinary Collatz\par}
+\vspace{4mm}
+{\normalsize Collatz-Final project\par}
+{\small\href{https://github.com/randogelist/Collatz-Final}{github.com/randogelist/Collatz-Final}\par}
+\vspace{4mm}
+\begin{abstract}
+We reconstruct three conditional closure criteria from the supplied dagger--Mazur
+Lean developments. Square-root restarts partition hypothetical bad starts into
+terminal fibres and failure-depth layers. A direct estimate for each fixed
+predecessor basin shows that cofinal smallness of the maximal layer mass forces
+zero lower harmonic density of that basin. Mazur's fixed-target positive
+predecessor-density theorem then yields Collatz. A second route uses existence
+of the harmonic density of each fixed terminal fibre; geometric gaps force
+every such limit to vanish. A synchronized weighted aggregate gives a third
+formulation. The analytic smallness and regularity conditions remain open.
+We distinguish source-level proofs, a supplied historical native log, and the
+external density theorem retained as an axiom in one Lean package.
+\end{abstract}
+
+\section{The main conditional reduction}
+For the ordinary map
+\[
+ C(n)=
+ \begin{cases}n/2,&2\mid n,\\3n+1,&2\nmid n,\end{cases}
+ \qquad
+ \CC:\ \forall n\ge1,\ \exists t\ge0,\ C^t(n)=1,
+\]
+write $\Bad=\{n\ge1:\forall t,\ C^t(n)\ne1\}$ and
+$\Pred_c=\{n\ge1:\exists t,\ C^t(n)=c\}$. The density input is
+\[
+ \MM:\quad
+ \forall c\ge1,\ 3\nmid c,\quad
+ \exists\delta_c>0,\ X_c,\ \forall X\ge X_c,\quad
+ \#(\Pred_c\cap[1,X))\ge\delta_c X.
+ \tag{M}
+\]
+This is the statement of Mazur's Theorem~1.1~\cite{mazur}; the constants
+may depend on $c$ and no convergence assumption on $c$ is made.
+
+Let $H_N=\sum_{n=1}^N1/n$, let
+$p_c(N)=H_N^{-1}\sum_{n\le N,\ n\in\Pred_c}1/n$, and let $D_N$ be the
+maximal normalized mass of an actual failure-depth layer, defined in
+Section~4. For every bad $c$ and $N,M\ge1$ the source derives
+\[
+ \boxed{p_c(N)\le M D_N+
+       \frac{2\log(2c)}{\log2}\,2^{-M}+\frac1{H_N}.}
+ \tag{1}
+\]
+\begin{theorem}[Direct basin closure]\label{thm:main}
+With $\FF:\liminf_{N\to\infty}D_N=0$, one has
+\[
+ \boxed{\MM\ \Longrightarrow\ (\FF\ \Longleftrightarrow\ \CC).}
+\]
+\end{theorem}
+The forward proof fixes $M$ before selecting a large favorable $N$.
+It requires neither a global terminal-tail estimate nor a Tao theorem.
+No proof of $\FF$ is supplied.
+
+\newpage
+\section{Actual square-root restarts and finite terminal packets}
+For $n>1$, set
+\[
+ \tau(n)=\min\{t\ge0:C^t(n)^2\le n\},\qquad
+ J(n)=
+ \begin{cases}
+ C^{\tau(n)}(n),&\text{if this set is nonempty},\\
+ 0,&\text{otherwise}.
+ \end{cases}
+\]
+Set $J(0)=0$ and $J(1)=1$. The value $0$ records a failed crossing.
+These are classical, noncomputable definitions: a finite orbit timeout
+does not establish failure.
+
+\begin{proposition}[First-crossing geometry]\label{prop:cross}
+If $n>1$ and $J(n)=r>0$, then
+\[
+ r^2\le n<4r^2,\qquad r<n,\qquad \exists t,\ C^t(n)=r.
+ \tag{2}
+\]
+\end{proposition}
+\begin{proof}
+The first inequality is the crossing condition. Immediately before the first
+crossing, the orbit is above $\sqrt n$. Its crossing step cannot be an odd
+step, which increases a positive value. It is a halving step from $2r$,
+so $n<(2r)^2$. Strict decrease follows from $r^2\le n$ and $n>1$.
+\end{proof}
+
+Let $E=\{e>1:J(e)=0\}$ be the failed endpoints. For $e\in E$, define
+\[
+ F_{e,k}=\{n\ge1:J^k(n)=e\},\qquad F_e=\bigcup_{k\ge0}F_{e,k}.
+\]
+Before arriving at $e$, these iterates are successful restarts. Badness is
+preserved by a successful restart. Their strict decrease implies that each
+bad start reaches a unique failed endpoint after a unique finite number of
+successful restarts. Consequently,
+\[
+ \Bad=\bigsqcup_{e\in E}\bigsqcup_{k\ge0} F_{e,k},\qquad e\in E\Rightarrow e\ge5.
+ \tag{3}
+\]
+The small cases $1,2,3,4$ reach $1$. Induction in (2) gives
+\[
+ n\in F_{e,k}\quad\Longrightarrow\quad
+ e^{2^k}\le n,\qquad 4n\le(4e)^{2^k}.
+ \tag{4}
+\]
+In particular, every fixed-depth cell is finite.
+
+\begin{proposition}[Fixed-basin finite cover]\label{prop:packet}
+For a bad target $c$,
+\[
+ \Pred_c\subseteq\bigcup_{\substack{e\in E\\ e<c^2}}F_e.
+ \tag{5}
+\]
+\end{proposition}
+\begin{proof}
+Let $m(n)=\min_{t\ge0}C^t(n)$. A successful first square-root
+restart occurs at or before the first occurrence of this minimum, so it preserves $m(n)$.
+At a failed endpoint $e$, one has $e<m(e)^2$. If $n\in\Pred_c$,
+then $m(n)\le c$. Its terminal endpoint therefore satisfies
+$e<m(e)^2=m(n)^2\le c^2$.
+\end{proof}
+\source{[R] \nolinkurl{jump_square_upper}, \nolinkurl{chain_power_bounds},
+\nolinkurl{pred_finite_cover}; [Z] \nolinkurl{successful_restart},
+\nolinkurl{orbitMin_J}, \nolinkurl{failure_lt_orbitMin_sq}}
+
+\newpage
+\section{Fixed-fibre regularity is a closure condition}
+For a set $A\subseteq\NN_{>0}$, use the strict-cutoff notation
+\[
+ S_A(X)=\sum_{\substack{1\le n<X\\n\in A}}\frac1n,\qquad
+ H(X)=\sum_{1\le n<X}\frac1n,\qquad d_A(X)=\frac{S_A(X)}{H(X)}.
+\]
+The empty initial cutoffs are immaterial. Define
+\[
+ \RR:\quad
+ \forall e\ge2,\ \exists\ell_e\in\mathbb R,\quad
+ d_{F_e}(X)\longrightarrow\ell_e.
+ \tag{R}
+\]
+For $e\notin E$ take $F_e=\varnothing$. This premise asks only for
+existence of each fixed-fibre limit.
+
+\begin{lemma}[Geometric gaps force a zero limit]\label{lem:gap}
+For every $e\in E$, any existing limit of $d_{F_e}$ equals zero.
+\end{lemma}
+\begin{proof}
+Set $U_r=(4e)^{2^r}$ and $V_r=e^{2^{r+1}}$.
+Since $e\ge5$, $U_r<V_r$. If $n\in F_{e,k}$ and $k\le r$, (4)
+implies $n<U_r$; if $k\ge r+1$, it implies $n\ge V_r$.
+Thus $F_e\cap[U_r,V_r)=\varnothing$ and
+$S_{F_e}(U_r)=S_{F_e}(V_r)$. Moreover,
+\[
+ \frac{H(U_r)}{2^r}\longrightarrow\log(4e),\qquad
+ \frac{H(V_r)}{2^r}\longrightarrow2\log e.
+\]
+If $d_{F_e}\to\ell_e$, dividing the equality of masses by $2^r$
+gives $\ell_e\log(4e)=2\ell_e\log e$. Since $4e<e^2$,
+the logarithms differ and $\ell_e=0$.
+\end{proof}
+
+\begin{lemma}[Natural density supplies harmonic mass]\label{lem:density}
+If $\#(A\cap[1,X))\ge\delta X$ eventually for some $\delta>0$,
+then $d_A(X)\ge\eta$ eventually for some $\eta>0$.
+\end{lemma}
+\begin{proof}
+Writing $A_{\le}(m)=\#(A\cap[1,m])$, finite summation by parts gives
+\[
+ \sum_{\substack{n\le N\\n\in A}}\frac1n
+ =\frac{A_{\le}(N)}N+
+   \sum_{m=1}^{N-1}\frac{A_{\le}(m)}{m(m+1)}.
+\]
+The eventual linear counting bound gives a lower bound
+$\delta\log N-O(1)$. Divide by $H_N=\log N+O(1)$ and take, for example,
+any fixed $\eta\in(0,\delta)$ after increasing the cutoff.
+\end{proof}
+
+\begin{theorem}[Regularity closure]
+\[
+ \boxed{\MM\ \Longrightarrow\ (\RR\ \Longleftrightarrow\ \CC).}
+ \tag{6}
+\]
+\end{theorem}
+\begin{proof}
+A failure of Collatz yields an odd bad value by repeated halving. If it is
+divisible by $3$, its next iterate is $1$ modulo $3$ and remains bad.
+Thus there is a bad $c$ with $3\nmid c$.
+By (M) and Lemma~\ref{lem:density}, its basin has
+eventually positive normalized harmonic mass. By (5), that mass is at most
+$\sum_{e<c^2}d_{F_e}(X)$, a fixed finite sum tending to zero under $\RR$.
+This is a contradiction. Conversely, Collatz makes all $F_e$ empty.
+\end{proof}
+\source{[R] \nolinkurl{gap_regular_limit_zero},
+\nolinkurl{positive_harmonic_lower},
+\nolinkurl{DAGGER_MAZUR_REGULARITY_EQUIVALENCE}}
+Only finite sums enter the proof. Gap geometry by itself does not establish
+the regularity premise.
+
+\newpage
+\section{Failure-depth layers and the terminal basin estimate}
+Collect all endpoints at a common depth:
+\[
+ L_k=\bigsqcup_{e\in E}F_{e,k},\qquad
+ A_k=\bigcup_{i<k}L_i,\qquad
+ K(N)=\min\{k:N<2^{2^k}\}.
+\]
+For $N\ge1$ define
+\[
+ \mu_N(S)=\frac1{H_N}\sum_{\substack{n\le N\\n\in S}}\frac1n,\quad
+ d_k(N)=\mu_N(L_k),\quad
+ D_N=\max\bigl(\{0\}\cup\{d_k(N):k<K(N)\}\bigr).
+\]
+From (4), no bad start $n\le N$ has failure depth $k\ge K(N)$.
+Thus
+\[
+ \mu_N(\Bad)=\sum_{k<K(N)}d_k(N),\quad
+ \mu_N(A_{k+1})-\mu_N(A_k)=d_k(N),\quad 0\le D_N\le1.
+ \tag{7}
+\]
+
+For a fixed bad $c$, split its basin at $k=(K(N)-M)_+$, where
+$x_+=\max(x,0)$. The last at most $M$ layers contribute at most $M D_N$:
+\[
+ p_c(N)\le M D_N+\mu_N(\Pred_c\cap A_k).
+ \tag{8}
+\]
+This intersects the early part with the \emph{fixed basin}; it does not
+replace it by the larger global early-failure mass.
+
+\begin{lemma}[Early-basin localization]
+\[
+ n\in\Pred_c\cap A_k\quad\Longrightarrow\quad n<(2c)^{2^k}.
+ \tag{9}
+\]
+\end{lemma}
+\begin{proof}
+Choose its terminal endpoint $e<c^2$ and depth $i<k$.
+Equation (4) gives $4n\le(4e)^{2^i}$.
+Since $4e<(2c)^2$ and $i+1\le k$, this implies (9).
+For $k=0$ the set $A_0$ is empty.
+\end{proof}
+Consequently,
+\[
+ \mu_N(\Pred_c\cap A_k)
+ \le\frac{1+2^k\log(2c)}{H_N}.
+ \tag{10}
+\]
+If $K(N)>0$, its minimality gives
+$2^{2^{K(N)-1}}\le N$, and hence
+\[
+ 2^{K(N)}\log2\le2H_N.
+ \tag{11}
+\]
+For $1\le M\le K(N)$, substitute $k=K(N)-M$ into (10)--(11):
+\[
+ \mu_N(\Pred_c\cap A_k)
+ \le\frac{2\log(2c)}{\log2}\,2^{-M}+\frac1{H_N}.
+ \tag{12}
+\]
+For $M>K(N)$ the early mass is zero, so (12) still holds.
+Combining (8) and (12) proves the main finite estimate (1).
+
+\source{[Z] \nolinkurl{ACTUAL_BAD_MASS_EQ_LAYER_SUM},
+\nolinkurl{BASIN_WINDOW_SPLIT}, \nolinkurl{BASIN_EARLY_SIZE_BOUND},
+\nolinkurl{K_POWER_HARMONIC_BOUND},
+\nolinkurl{DIRECT_BASIN_TERMINAL_BOUND}}
+The finite support bounds are exact arithmetic statements. The sets still
+use true failed crossings and do not acquire a computable membership test
+merely because a cutoff is finite.
+
+\newpage
+\section{Zero lower basin density and the exact open frontier}
+The precise epsilon form of the remaining condition is
+\[
+ \FF:\quad
+ \forall\varepsilon>0,\ \forall N_0,\ \exists N\ge N_0,\quad D_N<\varepsilon.
+ \tag{F}
+\]
+Since $0\le D_N\le1$, this is exactly $\liminf D_N=0$.
+
+\begin{proposition}[Bad basins have zero lower harmonic density under $\FF$]
+For every $c\in\Bad$,
+\[
+ \FF\quad\Longrightarrow\quad
+ \forall\varepsilon>0,\ \forall N_0,\ \exists N\ge N_0,\quad
+ p_c(N)<\varepsilon.
+ \tag{13}
+\]
+\end{proposition}
+\begin{proof}
+Given $\varepsilon>0$, first choose one integer $M\ge1$ such that
+$\frac{2\log(2c)}{\log2}2^{-M}<\varepsilon/3$.
+Choose $N_1$ such that $1/H_N<\varepsilon/3$ for $N\ge N_1$.
+Use $\FF$ to choose a common
+$N\ge\max(1,N_0,N_1)$ with $D_N<\varepsilon/(3M)$.
+Equation (1) gives (13).
+\end{proof}
+This establishes a zero \emph{lower} density. It does not assert the
+full limit $p_c(N)\to0$.
+
+Under (M), any eligible bad target has $p_c(N)\ge\eta_c>0$ eventually,
+by Lemma~\ref{lem:density}. This contradicts (13). Every failure of Collatz
+has an eligible bad target, proving the forward direction of
+Theorem~\ref{thm:main}. Conversely, under Collatz every failure layer is
+empty, so $D_N=0$ for every $N$.
+
+The same estimate yields a useful obstruction without assuming $\FF$:
+\[
+ \left.
+ \begin{gathered}
+ c\in\Bad,\quad
+ \Pred_c\text{ has positive lower natural density}
+ \end{gathered}\right\}
+ \Longrightarrow
+ \exists\delta>0,\ N_0,\ \forall N\ge N_0,\quad D_N>\delta.
+ \tag{14}
+\]
+Indeed, choose $M$ to make the geometric error below $\eta_c/4$ and
+then $N$ to make the harmonic error below $\eta_c/4$.
+Equation (1) forces $M D_N>\eta_c/2$.
+
+\subsection*{One common cutoff for every layer}
+An equivalent countable target is
+\[
+ \forall q,N_0\in\NN,\ \exists N\ge N_0,\ 
+ \forall k<K(N),\qquad d_k(N)\le2^{-q}.
+ \tag{15}
+\]
+The same $N$ must work for all these layers. Separate statements
+$\liminf_N d_k(N)=0$ do not give (15): two alternating zero--one
+sequences each have liminf zero while their maximum is always one.
+
+A proposed majorant $U(N,k)$ suffices if it dominates every actual
+$d_k(N)$ and satisfies (15) with $U$ in place of $d$.
+Both requirements need proof. The source's
+\nolinkurl{FrontierMajorantCertificate} stores a function and proof fields
+for these unbounded requirements; it is not raw finite data accepted by a
+terminating checker.
+
+\source{[Z] \nolinkurl{ACTUAL_FRONTIER_BAD_BASIN_LOWER_LOG_DENSITY_ZERO},
+\nolinkurl{ACTUAL_FRONTIER_MAZUR_ZERO_DENSITY_CLOSURE},
+\nolinkurl{BAD_BASIN_FORCES_LAYER_FLOOR},
+\nolinkurl{ACTUAL_FRONTIER_IFF_DYADIC_TARGET}}
+The remaining arithmetic task is to prove (F), or a sound common-cutoff
+majorant establishing it.
+
+\newpage
+\section{A synchronized weighted alternative}
+For each $e\in E$ and $k\ge0$, define the complete layer mass
+\[
+ h_{e,k}=\sum_{n\in F_{e,k}}\frac1n.
+\]
+The sum is finite by (4), without a cutoff on orbit time.
+For a bad target $c$ set
+\[
+ X_j=2^{2^j},\qquad
+ Q_c(j)=\sum_{\substack{e\in E\\ e<c^2}}\sum_{k=0}^{j}h_{e,k}.
+ \tag{16}
+\]
+Every predecessor $n\le X_j$ lies in this finite packet and has depth
+at most $j$. Therefore
+\[
+ \sum_{\substack{n\le X_j\\n\in\Pred_c}}\frac1n\le Q_c(j).
+ \tag{17}
+\]
+Under (M), Lemma~\ref{lem:density} and $H_{X_j}/2^j\to\log2$ give a
+positive eventual lower bound for the left side of (17), divided by $2^j$.
+
+\begin{theorem}[Synchronized aggregate closure]
+Define
+\[
+ \Agg:\quad
+ \forall c\in\Bad,\ 3\nmid c,\qquad
+ \liminf_{j\to\infty}\frac{Q_c(j)}{2^j}=0.
+\]
+Then
+\[
+ \boxed{\MM\ \Longrightarrow\ (\Agg\ \Longleftrightarrow\ \CC).}
+ \tag{18}
+\]
+\end{theorem}
+The forward direction contradicts the preceding lower bound. The converse
+is vacuous because under Collatz there are no bad targets. The small
+checkpoint must serve the entire finite sum in (16).
+
+\subsection*{Exact inverse-restart transport}
+For $r>1$ put
+\[
+ \Lambda(r)=r\sum_{\substack{n>1\\J(n)=r}}\frac1n.
+\]
+Its support lies in $r^2\le n<4r^2$. Partitioning $F_{e,k+1}$ by
+its first restart gives the identity
+\[
+ \boxed{h_{e,k+1}=\sum_{r\in F_{e,k}}\frac{\Lambda(r)}r.}
+ \tag{19}
+\]
+A sufficient open condition is: for every $e\in E$ with $3\nmid e$,
+there exist $\kappa_e\in(0,1)$ and $k_e$ such that
+\[
+ \sum_{r\in F_{e,k}}\frac{\Lambda(r)}r
+ \le2(1-\kappa_e)h_{e,k}\qquad(k\ge k_e).
+ \tag{20}
+\]
+It implies $h_{e,k}/2^k\to0$ by geometric decay.
+For $3\mid e$, every ordinary predecessor is of the form $2^j e$,
+so every layer has mass at most $2/e$; its normalized mass also vanishes.
+For any nonnegative sequence $h_k$ with $h_k/2^k\to0$, splitting off
+a fixed initial segment shows
+$2^{-j}\sum_{k\le j}h_k\to0$.
+The finite endpoint sum in (16) therefore tends to zero after normalization,
+which proves (A).
+
+\source{[W] \nolinkurl{basin_mass_le_aggregate},
+\nolinkurl{COLLATZ_IFF_DAGGER_AGGREGATE},
+\nolinkurl{layerMass_succ_eq_weighted},
+\nolinkurl{weighted_contraction_implies_growth},
+\nolinkurl{aggregate_tendsto_zero_of_growth}}
+The identity (19) is derived in source; (20) remains a hypothesis.
+Neither sparse orbit minima nor a finite parity-prefix count establishes it.
+
+\newpage
+\section{Formal scope, provenance, and remaining work}
+The statements above concern the actual ordinary map and actual restart
+sets. We keep (M) explicit in all displayed closure theorems. No regularity,
+frontier-smallness, weighted-contraction proof, or accepted finite global
+witness is supplied by this reconstruction.
+
+\begin{center}
+\small
+\begin{tabular}{@{}p{0.12\linewidth}p{0.38\linewidth}p{0.43\linewidth}@{}}
+\toprule
+Source & Mathematical role & Evidence in supplied archive\\
+\midrule
+{[R]} & Fixed-fibre geometry, harmonic gaps, regularity closure &
+FIX6 final validation pending; preparation notes report prior module passes.\\[4pt]
+{[P]} & Restart partition and moving-layer formulation &
+FIX5 runner completion not established by the supplied archive.\\[4pt]
+{[W]} & Weighted transport and aggregate closure &
+New modules marked pending native verification.\\[4pt]
+{[Z]} & Actual profile, direct basin bound, zero-density closure &
+Native PASS transcript for the package lineage; explicit literature axiom
+reported for public Mazur-bound endpoints.\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The core [Z] theorem takes both inputs as arguments:
+\[
+ \texttt{ActualFrontier}\ \longrightarrow\
+ \texttt{ActualPredecessorDensity}\ \longrightarrow\ \CC.
+\]
+The supplied transcript reports only \texttt{propext},
+\texttt{Classical.choice}, and \texttt{Quot.sound} for that conditional
+closure and the direct basin estimate. Public wrappers that remove the
+density argument additionally depend on
+\[
+ \texttt{CollatzMazurLiterature.MAZUR\_2026\_PREDECESSOR\_DENSITY}.
+\]
+This declaration is an \emph{axiom} in [Z], not an imported proof of
+Mazur's theorem. The external manuscript identifies the mathematical input;
+it does not change this local dependency boundary.
+
+The native transcript is retained evidence, not a fresh certification of
+the rebuilt archive. The repository's current eight-module finite-witness
+CI target does not compile these companion source branches. No local Lean
+compiler was run to prepare this paper. Future Lean compilation and audits
+must use the CI runner. LaTeX typesetting is separate from Lean verification.
+
+\subsection*{Reproducible source map}
+The companion
+\href{https://github.com/randogelist/Collatz-Final/blob/main/docs/preprint/mazur-sources.md}{source map}
+records archive hashes and the
+\href{https://github.com/randogelist/Collatz-Final/blob/main/docs/preprint/mazur-source-archives.zip}{source bundle}
+preserves the four original ZIP byte streams. The following identifiers
+refer to those exact package versions:
+{\footnotesize
+\begin{description}[leftmargin=2.8em,style=nextline]
+\item[{[R]}] \nolinkurl{COLLATZ_DAGGER_MAZUR_REGULARITY_LEAN_v0_1_6_FIX6}.
+\item[{[P]}] \nolinkurl{COLLATZ_DAGGER_PARTITION_MAZUR_LEAN_v0_1_5_FIX5}.
+\item[{[W]}] \nolinkurl{COLLATZ_DAGGER_WEIGHTED_CLOSURE_LEAN_v0_2_1_FIX1}.
+\item[{[Z]}] \nolinkurl{COLLATZ_MAZUR_FRONTIER_ZERO_DENSITY_ATIER_LEAN_v0_2_0_REBUILT}.
+\end{description}
+}
+These source versions are distinct developments. Their evidence is not
+combined into a claim of a single freshly compiled Lean chain.
+
+\begingroup
+\renewcommand{\refname}{Reference}
+\begin{thebibliography}{1}\small
+\bibitem{mazur}
+Lech Mazur, \emph{Positive Lower Density of Collatz Predecessors},
+version 1.0, 6 September 2026, Theorem 1.1.
+\href{https://www.proofatlas.ai/papers/positive-lower-density-collatz-predecessors/paper-v1.pdf}{Original manuscript (PDF)}.
+The theorem is the external input (M); its proof is not reproduced here.
+\end{thebibliography}
+\endgroup
+\end{document}
+
